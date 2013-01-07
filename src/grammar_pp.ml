@@ -2474,18 +2474,19 @@ and pp_prod m xd rnn rpw p = (* returns a string option *)
               in if categories = [] then "{}" else
               "{\\textsf{[" ^ String.concat " " categories ^ "]}}"
             else "{}" in
-          String.concat (pp_tex_PROD_NEWLINE_NAME m^"\n") 
-            ( String.concat "" [ pp_tex_PROD_NAME m;
-                                 "{|}";
-                                 "{";pp_prod;"}";
-                                 pp_meta_or_bindspec;
-                                 pp_categories;
-                                 "{";pp_com;"}";
-                               ]
-              ::
-                (List.map (function pp_bs -> 
-                  pp_tex_BINDSPEC_PROD_NAME m ^ "{}{}{}{" ^ pp_bs ^"}{}{}") pp_remaining_bindspecs))
-                              )
+          let pp_remaining = (List.map (function pp_bs ->
+                  pp_tex_BINDSPEC_PROD_NAME m ^ "{}{}{}{" ^ pp_bs ^"}{}{}") pp_remaining_bindspecs) in
+          if pp_prod = "  "
+            then ""
+            else (String.concat (pp_tex_PROD_NEWLINE_NAME m^"\n")
+                  (String.concat "" [ pp_tex_PROD_NAME m;
+                                       "{|}";
+                                       "{";pp_prod;"}";
+                                       pp_meta_or_bindspec;
+                                       pp_categories;
+                                       "{";pp_com;"}";
+                                     ]
+                  :: pp_remaining)))
 
 and pp_internal_coq_buffer = ref "" (* FZ HACK *)
 
@@ -2581,7 +2582,8 @@ and pp_rule m xd r = (* returns a string option *)
                     ( ( pp_tex_RULEHEAD_NAME m^"{"
 	                ^ String.concat  "  ,\\ "
 	                    (List.map (function ntr,homs->pp_nontermroot m xd ntr) r.rule_ntr_names)
-	                ^ "}{::=}{" ^ pp_com ^ "}")
+                  ^ (if xo.ppt_show_sets then "\\in " ^ r.rule_pn_wrapper else "")
+                  ^ "}{::=}{" ^ pp_com ^ "}")
                       ::
 	                (Auxl.option_map 
                            (pp_prod m xd r.rule_ntr_name r.rule_pn_wrapper)

@@ -836,7 +836,8 @@ and pp_tex_opts =
       ppt_show_meta : bool;
       ppt_show_categories : bool;
       ppt_wrap : bool;
-      ppt_name_prefix : string }  (* xo *)
+      ppt_name_prefix : string;
+      ppt_show_sets : bool }  (* xo *)
 and pp_caml_opts = 
     { ppo_include_terminals : bool;
       caml_library : (string * string list) ref } (* oo *) 
