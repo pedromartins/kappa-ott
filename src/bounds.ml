@@ -149,10 +149,11 @@ let check_bounds_consistency :
           let rec f acc xbos =
             (match xbos with
             | [] -> acc
-            | (x,bo)::xbos' -> 
-                match (try(Some(List.assoc x acc)) with Not_found -> None) with
+            | ((xntmv, xsntr),bo)::xbos' ->
+                let x = (xntmv, xsntr) in
+                match (try(Some(List.find (function ((ntmv, sntr), bo) -> ntmv = xntmv) acc)) with Not_found -> None) with
                 | None -> f ((x,bo)::acc) xbos'
-                | Some bo' -> 
+                | Some (x', bo') -> 
                     (if bo=bo' then f acc xbos'
                     else 
                       raise (Bounds ("inconsistent bounds for "^Grammar_pp.pp_plain_nt_or_mv (fst x)^": "^Grammar_pp.pp_plain_bound_option bo ^" and "^Grammar_pp.pp_plain_bound_option bo'  )))) in
