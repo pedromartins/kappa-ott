@@ -3737,7 +3737,6 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
 		(*     ty_list in *)
 		(* "map_list_" ^ Auxl.pp_coq_type_name (String.concat "_" na_list)  *)
 	      else "map" in
-
             let header, footer =
               let (el,bl) = List.split (convert_elements prod_es) in
               if (not co.coq_expand_lists) || List.exists (fun x -> x) bl 
@@ -3756,9 +3755,16 @@ and pp_symterm_list_body m xd sie (de :dotenv) tmopt include_terminals prod_es s
 		then "("^de1i.de1_pattern^":"^de1i.de1_coq_type_of_pattern^")", "" (* FZ FRESHEN pat_ *)
 		else "(pat_:"^de1i.de1_coq_type_of_pattern^") => match pat_ with " ^ de1i.de1_pattern, " end "  in
 
+        (match prod_es with
+        | [(Lang_nonterm("formula",_))] -> 
+            [ "(forall "^String.concat " " var_list
+            ^ ", "^"In ("^String.concat ", " var_list^") "^de1i.de1_compound_id
+            ^ " -> " ^ pp_body^")"
+            ]
+        | _ ->
 	    [ header 
 	      ^ "("^map_fun^" (fun "^pat_fun^" => "^pp_body^ pat_fun_end ^") " 
-	      ^ de1i.de1_compound_id ^")" ^ footer ] 
+	      ^ de1i.de1_compound_id ^")" ^ footer ])
         | Twf _ -> raise TwelfNotImplemented
          )))
 
