@@ -68,6 +68,7 @@ let showraw = ref false
 let tex_show_meta = ref true
 let tex_show_categories = ref false
 let tex_show_sets = ref false
+let tex_show_only_first_metavar = ref false
 let tex_colour = ref true
 let tex_wrap = ref true
 let process_defns = ref true
@@ -190,6 +191,9 @@ let options = Arg.align [
   ( "-tex_show_sets",
     Arg.Bool (fun b -> tex_show_sets := b),
     "<"^string_of_bool !tex_show_sets^"> Show sets in TeX output" );
+  ( "-tex_show_only_first_metavar",
+    Arg.Bool (fun b -> tex_show_only_first_metavar := b),
+    "<"^string_of_bool !tex_show_only_first_metavar^"> Show only first metavariable in TeX grammars." );
 
 (* options for isa output *)
   ( "-isabelle_primrec",
@@ -373,6 +377,7 @@ let m_tex = Tex {ppt_colour= !tex_colour;
                  ppt_show_meta= !tex_show_meta;
                  ppt_show_categories= !tex_show_categories;
                  ppt_show_sets= !tex_show_sets;
+                 ppt_show_only_first_metavar= !tex_show_only_first_metavar;
                  ppt_wrap= !tex_wrap;
                  ppt_name_prefix= !tex_name_prefix } 
 let m_isa = Isa { ppi_isa_primrec = !isa_primrec;

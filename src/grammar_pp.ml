@@ -2580,8 +2580,8 @@ and pp_rule m xd r = (* returns a string option *)
                ^ "}{\n"
 	       ^ (String.concat (pp_tex_PROD_NEWLINE_NAME m^"\n") 
                     ( ( pp_tex_RULEHEAD_NAME m^"{"
-	                ^ String.concat  "  ,\\ "
-	                    (List.map (function ntr,homs->pp_nontermroot m xd ntr) r.rule_ntr_names)
+	                ^ (let mvars = (List.map (function ntr,homs->pp_nontermroot m xd ntr) r.rule_ntr_names)
+                     in if xo.ppt_show_only_first_metavar then List.hd mvars else String.concat "  ,\\ " mvars)
                   ^ (if xo.ppt_show_sets then "\\in " ^ r.rule_pn_wrapper else "")
                   ^ "}{::=}{" ^ pp_com ^ "}")
                       ::
